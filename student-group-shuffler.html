@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShuffleSan</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@200;300;400;500&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Crimson Text', 'Hiragino Mincho ProN', serif;
+            background: #fdf8f9;
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #2c2c2c;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 60px 80px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            font-family: 'Montserrat', 'Hiragino Sans', sans-serif;
+            font-weight: 200;
+            font-size: 2.8rem;
+            text-align: center;
+            margin-bottom: 10px;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            color: #1a1a1a;
+        }
+
+        h1::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 1px;
+            background: #e8b4c6;
+            margin: 30px auto 50px;
+        }
+
+        .control-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 50px;
+            padding: 0;
+            border-bottom: 1px solid #f2e8ea;
+            padding-bottom: 30px;
+        }
+
+        .add-class-btn {
+            background: transparent;
+            color: #1a1a1a;
+            border: 1px solid #e8b4c6;
+            padding: 12px 28px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 400;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-transform: uppercase;
+        }
+
+        .add-class-btn:hover {
+            background: #e8b4c6;
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
+
+        .group-info p {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.95rem;
+            color: #666;
+            letter-spacing: 1px;
+        }
+        
+        #groupCountDisplay {
+            color: #e8b4c6;
+            font-weight: 500;
+        }
+
+        .classes-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .class-card {
+            background: #fcfbfb;
+            border: 1px solid #f2e8ea;
+            padding: 30px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .class-card:hover {
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .class-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f2e8ea;
+        }
+
+        .class-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 300;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .remove-class-btn {
+            background: transparent;
+            color: #d4a0aa;
+            border: none;
+            padding: 6px 12px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .remove-class-btn:hover {
+            color: #e8b4c6;
+        }
+
+        .teacher-input {
+            width: 100%;
+            padding: 10px 0;
+            margin-bottom: 20px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #f2e8ea;
+            font-size: 1.1rem;
+            font-family: 'Crimson Text', serif;
+            color: #2c2c2c;
+            transition: border-color 0.3s ease;
+        }
+
+        .teacher-input:focus {
+            outline: none;
+            border-bottom-color: #e8b4c6;
+        }
+
+        .teacher-input::placeholder {
+            color: #c8b4b8;
+            font-style: italic;
+        }
+
+        .student-textarea {
+            width: 100%;
+            height: 150px;
+            padding: 15px;
+            background: #ffffff;
+            border: 1px solid #f2e8ea;
+            font-size: 1rem;
+            font-family: 'Crimson Text', serif;
+            color: #2c2c2c;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+            line-height: 1.8;
+        }
+
+        .student-textarea:focus {
+            outline: none;
+            border-color: #e8b4c6;
+        }
+
+        .student-textarea::placeholder {
+            color: #c8b4b8;
+            font-style: italic;
+        }
+
+        .student-count {
+            margin-top: 15px;
+            color: #b8a0a8;
+            font-size: 0.85rem;
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 1px;
+        }
+
+        .action-section {
+            text-align: center;
+            margin: 80px 0;
+        }
+
+        .shuffle-btn {
+            background: #1a1a1a;
+            color: #ffffff;
+            border: none;
+            padding: 18px 50px;
+            font-size: 0.95rem;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 300;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .shuffle-btn:hover {
+            background: #e8b4c6;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(232, 180, 198, 0.3);
+        }
+
+        .results-section {
+            display: none;
+            margin-top: 80px;
+            padding-top: 60px;
+            border-top: 1px solid #f2e8ea;
+        }
+
+        .results-title {
+            text-align: center;
+            color: #1a1a1a;
+            margin-bottom: 50px;
+            font-size: 2rem;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 200;
+            text-transform: uppercase;
+            letter-spacing: 6px;
+        }
+        
+        .results-title::after {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 1px;
+            background: #e8b4c6;
+            margin: 20px auto 0;
+        }
+
+        .groups-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .group-card {
+            background: #ffffff;
+            border: 1px solid #f2e8ea;
+            padding: 35px;
+            transition: all 0.3s ease;
+        }
+
+        .group-card:hover {
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.06);
+            transform: translateY(-2px);
+        }
+
+        .group-card h3 {
+            color: #1a1a1a;
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f2e8ea;
+        }
+        
+        .group-card h3 span {
+            color: #e8b4c6;
+            font-weight: 300;
+        }
+
+        .student-item {
+            padding: 12px 0;
+            margin: 0;
+            border-bottom: 1px solid #faf2f3;
+            font-size: 1.05rem;
+            color: #2c2c2c;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+
+        .student-item:last-child {
+            border-bottom: none;
+        }
+
+        .student-item:hover {
+            padding-left: 10px;
+            color: #1a1a1a;
+        }
+
+        .student-class {
+            color: #b8a0a8;
+            font-size: 0.9rem;
+            font-family: 'Crimson Text', serif;
+        }
+
+        .error-message {
+            background: #fef5f5;
+            color: #c63e3e;
+            padding: 20px 30px;
+            border-left: 3px solid #c63e3e;
+            margin: 30px 0;
+            text-align: center;
+            display: none;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>学生グループ分けシステム</h1>
+        
+        <div class="control-section">
+            <button class="add-class-btn" onclick="addClass()">
+                <span style="font-size: 1.2rem; font-weight: 300;">+</span>
+                <span>クラスを追加</span>
+            </button>
+            <div class="group-info" id="groupInfo" style="display: none;">
+                <p>
+                    グループ数: <span id="groupCountDisplay">-</span>
+                    <span style="font-size: 0.85rem; margin-left: 10px;">（最小クラスのサイズに基づく）</span>
+                </p>
+            </div>
+        </div>
+
+        <div id="classesContainer" class="classes-container"></div>
+
+        <div class="error-message" id="errorMessage"></div>
+
+        <div class="action-section">
+            <button class="shuffle-btn" onclick="shuffleAndCreateGroups()">
+                グループを作成する
+            </button>
+        </div>
+
+        <div class="results-section" id="resultsSection">
+            <h2 class="results-title">新しいグループ分け</h2>
+            <div id="groupsContainer" class="groups-container"></div>
+        </div>
+    </div>
+
+    <footer style="text-align: center; margin-top: 80px; padding: 40px 20px; border-top: 1px solid #f2e8ea;">
+        <p style="font-family: 'Montserrat', sans-serif; font-size: 0.8rem; color: #b8a0a8; letter-spacing: 1px;">
+            &copy; 2026 KOICHI AKASHI
+        </p>
+    </footer>
+
+    <script>
+        let classCounter = 0;
+        let classes = {};
+
+        function addClass() {
+            classCounter++;
+            const classId = `class-${classCounter}`;
+            classes[classId] = {
+                teacher: '',
+                students: []
+            };
+
+            const classCard = document.createElement('div');
+            classCard.className = 'class-card';
+            classCard.id = classId;
+            classCard.innerHTML = `
+                <div class="class-header">
+                    <div class="class-title">クラス ${classCounter}</div>
+                    <button class="remove-class-btn" onclick="removeClass('${classId}')">削除</button>
+                </div>
+                <input type="text" class="teacher-input" placeholder="担当教師名" onchange="updateTeacher('${classId}', this.value)">
+                <textarea class="student-textarea" 
+                    placeholder="Excelから学生名をコピー＆ペーストしてください（1行に1名）" 
+                    onpaste="handlePaste('${classId}', event)"
+                    oninput="updateStudents('${classId}', this.value)"></textarea>
+                <div class="student-count" id="${classId}-count">学生数: 0名</div>
+            `;
+
+            document.getElementById('classesContainer').appendChild(classCard);
+        }
+
+        function removeClass(classId) {
+            delete classes[classId];
+            document.getElementById(classId).remove();
+            updateGroupCount();
+            renumberClasses();
+        }
+        
+        function renumberClasses() {
+            const classCards = document.querySelectorAll('.class-card');
+            classCards.forEach((card, index) => {
+                const newNumber = index + 1;
+                const titleElement = card.querySelector('.class-title');
+                titleElement.textContent = `クラス ${newNumber}`;
+            });
+        }
+
+        function updateTeacher(classId, teacher) {
+            classes[classId].teacher = teacher;
+        }
+
+        function handlePaste(classId, event) {
+            event.preventDefault();
+            const pastedData = event.clipboardData.getData('text');
+            const textarea = event.target;
+            textarea.value = pastedData;
+            updateStudents(classId, pastedData);
+        }
+
+        function updateStudents(classId, studentsText) {
+            const students = studentsText
+                .split('\n')
+                .map(s => s.trim())
+                .filter(s => s.length > 0);
+            
+            classes[classId].students = students;
+            document.getElementById(`${classId}-count`).textContent = `学生数: ${students.length}名`;
+            updateGroupCount();
+        }
+
+        function updateGroupCount() {
+            const activeClasses = Object.entries(classes).filter(([id, data]) => data.students.length > 0);
+            if (activeClasses.length > 0) {
+                const minClassSize = Math.min(...activeClasses.map(([id, data]) => data.students.length));
+                document.getElementById('groupCountDisplay').textContent = minClassSize;
+                document.getElementById('groupInfo').style.display = 'block';
+            } else {
+                document.getElementById('groupInfo').style.display = 'none';
+            }
+        }
+
+        function shuffleArray(array) {
+            const arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function shuffleAndCreateGroups() {
+            const errorElement = document.getElementById('errorMessage');
+            errorElement.style.display = 'none';
+
+            const activeClasses = Object.entries(classes).filter(([id, data]) => data.students.length > 0);
+            
+            if (activeClasses.length === 0) {
+                errorElement.textContent = 'エラー：少なくとも1つのクラスに学生を入力してください。';
+                errorElement.style.display = 'block';
+                return;
+            }
+
+            const minClassSize = Math.min(...activeClasses.map(([id, data]) => data.students.length));
+            const groupCount = minClassSize;
+            
+            // Log initial student counts
+            console.log('=== 初期学生数 ===');
+            let totalStudents = 0;
+            activeClasses.forEach(([classId, classData]) => {
+                console.log(`${classData.teacher || classId}: ${classData.students.length}名`);
+                totalStudents += classData.students.length;
+            });
+            console.log(`合計学生数: ${totalStudents}名`);
+
+            // Create groups
+            const groups = Array.from({ length: groupCount }, () => []);
+
+            // First phase: Allocate first m students from each class
+            activeClasses.forEach(([classId, classData]) => {
+                const shuffledStudents = shuffleArray(classData.students);
+                
+                // Allocate first m students to ensure each group gets one from this class
+                for (let i = 0; i < groupCount; i++) {
+                    groups[i].push({
+                        name: shuffledStudents[i],
+                        classId: classId,
+                        teacher: classData.teacher || `クラス${classId.split('-')[1]}`
+                    });
+                }
+                
+                // Store remaining students for second phase
+                classData.shuffledRemaining = shuffledStudents.slice(groupCount);
+            });
+
+            // Second phase: Distribute remaining students evenly
+            let groupIndex = 0;
+            activeClasses.forEach(([classId, classData]) => {
+                classData.shuffledRemaining.forEach(student => {
+                    groups[groupIndex].push({
+                        name: student,
+                        classId: classId,
+                        teacher: classData.teacher || `クラス${classId.split('-')[1]}`
+                    });
+                    groupIndex = (groupIndex + 1) % groupCount;
+                });
+            });
+            
+            // Log final allocation
+            console.log('\n=== 最終グループ配分 ===');
+            let allocatedTotal = 0;
+            groups.forEach((group, index) => {
+                console.log(`グループ ${index + 1}: ${group.length}名`);
+                allocatedTotal += group.length;
+            });
+            console.log(`配分済み合計: ${allocatedTotal}名`);
+            
+            if (totalStudents !== allocatedTotal) {
+                console.error(`警告: 学生数が一致しません！ 初期: ${totalStudents}名, 配分済み: ${allocatedTotal}名`);
+            } else {
+                console.log('✓ 全学生が正しく配分されました');
+            }
+
+            // Sort students in each group (handles both names and numbers)
+            groups.forEach(group => {
+                group.sort((a, b) => {
+                    // Check if both are numbers
+                    const aNum = parseFloat(a.name);
+                    const bNum = parseFloat(b.name);
+                    
+                    if (!isNaN(aNum) && !isNaN(bNum)) {
+                        return aNum - bNum;
+                    }
+                    
+                    // Otherwise sort as strings
+                    return a.name.localeCompare(b.name, 'ja');
+                });
+            });
+
+            // Display results
+            displayGroups(groups);
+        }
+
+        function displayGroups(groups) {
+            const resultsSection = document.getElementById('resultsSection');
+            const groupsContainer = document.getElementById('groupsContainer');
+            
+            resultsSection.style.display = 'block';
+            groupsContainer.innerHTML = '';
+
+            groups.forEach((group, index) => {
+                const groupCard = document.createElement('div');
+                groupCard.className = 'group-card';
+                
+                let groupHTML = `<h3>グループ ${index + 1} <span>(${group.length}名)</span></h3>`;
+                group.forEach(student => {
+                    groupHTML += `
+                        <div class="student-item">
+                            ${student.name}
+                            <span class="student-class">(${student.teacher})</span>
+                        </div>
+                    `;
+                });
+
+                groupCard.innerHTML = groupHTML;
+                groupsContainer.appendChild(groupCard);
+            });
+
+            // Scroll to results
+            resultsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Initialize with 5 classes
+        for (let i = 0; i < 5; i++) {
+            addClass();
+        }
+    </script>
+</body>
+</html>
