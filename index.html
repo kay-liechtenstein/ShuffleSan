@@ -568,6 +568,13 @@
         let classes = {};
 
         function addClass() {
+            // Check if we've reached the 50 class limit
+            const currentClassCount = document.querySelectorAll('.class-card').length;
+            if (currentClassCount >= 50) {
+                alert('クラス数の上限（50クラス）に達しました。');
+                return;
+            }
+            
             // Find the next available number
             let nextNumber = 1;
             const existingNumbers = Array.from(document.querySelectorAll('.class-card'))
@@ -639,8 +646,17 @@
             event.preventDefault();
             const pastedData = event.clipboardData.getData('text');
             const textarea = event.target;
-            textarea.value = pastedData;
-            updateStudents(classId, pastedData);
+            
+            // Only keep first 500 students if pasting more
+            const students = pastedData.split('\n').map(s => s.trim()).filter(s => s.length > 0);
+            if (students.length > 500) {
+                alert('貼り付けデータが学生数の上限（500名）を超えています。最初の500名のみが登録されます。');
+                textarea.value = students.slice(0, 500).join('\n');
+            } else {
+                textarea.value = pastedData;
+            }
+            
+            updateStudents(classId, textarea.value);
         }
 
         function updateStudents(classId, studentsText) {
@@ -649,8 +665,18 @@
                 .map(s => s.trim())
                 .filter(s => s.length > 0);
             
-            classes[classId].students = students;
-            document.getElementById(`${classId}-count`).textContent = `学生数: ${students.length}名`;
+            // Limit to 500 students per class
+            if (students.length > 500) {
+                alert('学生数の上限（500名）を超えています。最初の500名のみが登録されます。');
+                // Update textarea to show only first 500 students
+                const textarea = document.querySelector(`#${classId} .student-textarea`);
+                textarea.value = students.slice(0, 500).join('\n');
+            }
+            
+            const limitedStudents = students.slice(0, 500);
+            
+            classes[classId].students = limitedStudents;
+            document.getElementById(`${classId}-count`).textContent = `学生数: ${limitedStudents.length}名`;
             updateGroupCount();
         }
 
