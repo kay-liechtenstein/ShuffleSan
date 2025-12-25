@@ -71,10 +71,11 @@
             letter-spacing: 2px;
             cursor: pointer;
             transition: all 0.3s ease;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 8px;
             text-transform: uppercase;
+            width: auto;
         }
 
         .add-class-btn:hover {
@@ -360,6 +361,141 @@
             font-family: 'Montserrat', sans-serif;
             font-size: 0.9rem;
             letter-spacing: 0.5px;
+        }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            .control-section {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .add-class-btn {
+                margin: 0 auto;
+            }
+            .container {
+                padding: 20px 15px;
+                max-width: 100%;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+                letter-spacing: 3px;
+                margin-bottom: 30px;
+            }
+
+            .group-container {
+                margin-bottom: 40px;
+            }
+
+            .classes-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .class-card {
+                padding: 20px;
+            }
+
+            .class-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .remove-class-btn {
+                align-self: flex-end;
+                margin-top: -30px;
+            }
+
+            .teacher-input {
+                font-size: 0.9rem;
+                padding: 10px;
+            }
+
+            .student-textarea {
+                min-height: 120px;
+                font-size: 0.9rem;
+            }
+
+            .group-input {
+                width: 100%;
+                font-size: 1rem;
+                padding: 12px 15px;
+            }
+
+            .button-group {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            button {
+                width: 100%;
+                padding: 14px 20px;
+                font-size: 0.9rem;
+            }
+
+            #groupsContainer {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .group-card {
+                padding: 25px 20px;
+            }
+
+            .group-card h3 {
+                font-size: 1rem;
+                padding-right: 70px; /* Space for classroom input */
+            }
+
+            .classroom-input {
+                top: 25px;
+                right: 20px;
+                width: 50px;
+                font-size: 0.85rem;
+                padding: 5px 6px;
+            }
+
+            .student-item {
+                font-size: 0.95rem;
+                padding: 10px 0;
+            }
+
+            .student-class {
+                font-size: 0.85rem;
+            }
+
+            footer {
+                margin-top: 60px;
+                padding: 30px 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.5rem;
+                letter-spacing: 2px;
+            }
+
+            .class-title {
+                font-size: 0.95rem;
+            }
+
+            .remove-class-btn {
+                font-size: 0.75rem;
+                padding: 6px 12px;
+            }
+
+            button {
+                font-size: 0.85rem;
+                letter-spacing: 1px;
+            }
+
+            .group-card h3 {
+                font-size: 0.95rem;
+                letter-spacing: 1.5px;
+            }
         }
     </style>
 </head>
