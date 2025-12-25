@@ -443,9 +443,9 @@
                     <div class="class-title">クラス ${nextNumber}</div>
                     <button class="remove-class-btn" onclick="removeClass('${classId}')">削除</button>
                 </div>
-                <input type="text" class="teacher-input" placeholder="担当教師名" onchange="updateTeacher('${classId}', this.value)">
+                <input type="text" class="teacher-input" placeholder="担当教員名" onchange="updateTeacher('${classId}', this.value)">
                 <textarea class="student-textarea" 
-                    placeholder="Excelから学生名をコピー＆ペーストしてください（1行に1名）" 
+                    placeholder="学生氏名または学籍番号を入力、またはExcelからコピー&ペーストしてください（1行に1名）" 
                     onpaste="handlePaste('${classId}', event)"
                     oninput="updateStudents('${classId}', this.value)"></textarea>
                 <div class="student-count" id="${classId}-count">学生数: 0名</div>
