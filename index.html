@@ -269,6 +269,7 @@
             border: 1px solid #f2e8ea;
             padding: 35px;
             transition: all 0.3s ease;
+            position: relative;
         }
 
         .group-card:hover {
@@ -286,6 +287,34 @@
             letter-spacing: 2px;
             padding-bottom: 15px;
             border-bottom: 1px solid #f2e8ea;
+        }
+        
+        .classroom-input {
+            position: absolute;
+            top: 35px;
+            right: 35px;
+            width: 60px;
+            padding: 6px 8px;
+            border: 1px solid #f2e8ea;
+            background: #faf6f7;
+            font-family: 'Noto Sans JP', sans-serif;
+            font-size: 0.9rem;
+            color: #2c2c2c;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .classroom-input:focus {
+            outline: none;
+            border-color: #e8b4c6;
+            background: #ffffff;
+            box-shadow: 0 2px 8px rgba(232, 180, 198, 0.15);
+        }
+
+        .classroom-input::placeholder {
+            color: #b8a0a8;
+            font-size: 0.85rem;
         }
         
         .group-card h3 span {
@@ -587,7 +616,11 @@
                 const groupCard = document.createElement('div');
                 groupCard.className = 'group-card';
                 
-                let groupHTML = `<h3>グループ ${index + 1} <span>(${group.length}名)</span></h3>`;
+                let groupHTML = `
+                    <input type="text" class="classroom-input" placeholder="教室" 
+                           id="classroom-${index}" 
+                           onchange="updateClassroom(${index}, this.value)">
+                    <h3>グループ ${index + 1} <span>(${group.length}名)</span></h3>`;
                 group.forEach(student => {
                     groupHTML += `
                         <div class="student-item">
@@ -603,6 +636,13 @@
 
             // Scroll to results
             resultsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Store classroom assignments
+        let classroomAssignments = {};
+        
+        function updateClassroom(groupIndex, classroom) {
+            classroomAssignments[groupIndex] = classroom;
         }
 
         // Initialize with 5 classes
