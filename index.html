@@ -378,8 +378,29 @@
         let classes = {};
 
         function addClass() {
-            classCounter++;
-            const classId = `class-${classCounter}`;
+            // Find the next available number
+            let nextNumber = 1;
+            const existingNumbers = Array.from(document.querySelectorAll('.class-card'))
+                .map(card => {
+                    const title = card.querySelector('.class-title').textContent;
+                    const match = title.match(/クラス (\d+)/);
+                    return match ? parseInt(match[1]) : 0;
+                })
+                .sort((a, b) => a - b);
+            
+            // Find the first gap in the sequence
+            for (let i = 0; i < existingNumbers.length; i++) {
+                if (existingNumbers[i] !== i + 1) {
+                    nextNumber = i + 1;
+                    break;
+                }
+            }
+            if (nextNumber === 1 && existingNumbers.length > 0) {
+                nextNumber = existingNumbers[existingNumbers.length - 1] + 1;
+            }
+            
+            classCounter = Math.max(classCounter, nextNumber);
+            const classId = `class-${nextNumber}`;
             classes[classId] = {
                 teacher: '',
                 students: []
@@ -390,7 +411,7 @@
             classCard.id = classId;
             classCard.innerHTML = `
                 <div class="class-header">
-                    <div class="class-title">クラス ${classCounter}</div>
+                    <div class="class-title">クラス ${nextNumber}</div>
                     <button class="remove-class-btn" onclick="removeClass('${classId}')">削除</button>
                 </div>
                 <input type="text" class="teacher-input" placeholder="担当教師名" onchange="updateTeacher('${classId}', this.value)">
